@@ -5,14 +5,11 @@ import FormLogin from '../../components/FormLogin/FormLogin';
 function Login() {
     return (
         <div className="container">
-            <div className="boxForm">
+            <div className="box-form">
                 <div className="form">
                     <h1>Login</h1>
                     <FormLogin />
                 </div>
-            </div>
-            <div className="boxImg">
-                <img src={loginImg} alt="Login" />
             </div>
         </div>
     );

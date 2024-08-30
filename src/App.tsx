@@ -1,7 +1,12 @@
-import Login from './pages/Login/Login';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
-    return <Login />;
+    return (
+        <Router>
+            <AppRoutes />
+        </Router>
+    );
 }
 
 export default App;

@@ -1,56 +1,98 @@
+import { useState } from 'react';
+import { TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 import './FormLogin.css';
 import Button from '../ButtonSubmit/Button.tsx';
-import { TextField } from '@mui/material';
+import { api } from '../../services/api.service.ts';
+import { useDocumentMask } from '../../hooks/masks/useDocumentMask.ts';
 
 function FormLogin() {
-    const handleLogin = () => {
-        // Lógica de login
-        console.log('Login button clicked');
+    const [userDocument, setDocument, getRawDocument] = useDocumentMask('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async () => {
+        try {
+            const doc = getRawDocument();
+            const { data } = await api.post('/users/login', {
+                document: doc,
+                password,
+            });
+
+            const token = data.data.idToken;
+            document.cookie = `token=${token}; path=/; HttpOnly; Secure; SameSite=Strict`;
+
+            navigate('/home');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    // Estilos unificados
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        if (name === 'document') {
+            setDocument(value);
+        } else {
+            setPassword(value);
+        }
+    };
+
     const textFieldStyles = {
-        input: { color: 'white' },
+        input: { color: 'black' },
         '& .MuiInput-underline:before': {
-            borderBottomColor: 'white',
+            borderBottomColor: 'black',
         },
         '&:hover .MuiInput-underline:before': {
-            borderBottomColor: 'white',
+            borderBottomColor: 'black',
         },
         '& .MuiInput-underline:after': {
-            borderBottomColor: 'white',
+            borderBottomColor: 'black',
         },
         '& .MuiInputLabel-root': {
-            color: 'white',
+            color: 'black',
         },
         '& .MuiInputLabel-root.Mui-focused': {
-            color: 'white',
+            color: 'black',
         },
     };
+
+    const isButtonDisabled = !userDocument || !password;
 
     return (
         <div className="box">
             <div>
                 <TextField
-                    id="username"
-                    label="Usuário"
-                    variant="standard" // Mudança aqui
+                    name="document"
+                    label="usuário"
+                    variant="standard"
                     fullWidth
                     size="small"
                     sx={textFieldStyles}
+                    value={userDocument}
+                    onChange={handleInputChange}
                 />
             </div>
             <div>
                 <TextField
-                    id="password"
-                    label="Senha"
-                    variant="standard" // Mudança aqui
+                    name="password"
+                    label="senha"
+                    variant="standard"
                     fullWidth
                     size="small"
                     sx={textFieldStyles}
+                    type="password" // Adicionando tipo password
+                    value={password}
+                    onChange={handleInputChange}
                 />
             </div>
-            <Button type="submit" variant="primary" onClick={handleLogin}>
+            <Button
+                type="submit"
+                variant="primary"
+                onClick={handleLogin}
+                disabled={isButtonDisabled}
+            >
                 ENTRAR
             </Button>
             <div className="box-forgot-password">
