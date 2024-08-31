@@ -10,7 +10,7 @@ interface ButtonProps {
     className?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const SubmitButton: React.FC<ButtonProps> = ({
     children,
     onClick,
     type = 'button',
@@ -30,4 +30,4 @@ const Button: React.FC<ButtonProps> = ({
     );
 };
 
-export default Button;
+export default SubmitButton;
