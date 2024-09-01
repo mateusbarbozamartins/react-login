@@ -8,6 +8,7 @@ import { CustomTextField, IconWrapper } from '../Mui/Mui';
 import { useDocumentMask } from '../../hooks/masks/useDocumentMask';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import SubmitButton from '../ButtonSubmit/Button';
+import { api } from '../../services/api.service';
 
 function ForgotPassword() {
     const [userDocument, setDocument, getRawDocument] = useDocumentMask('');
@@ -19,7 +20,12 @@ function ForgotPassword() {
 
     const handleValidData = async () => {
         const doc = getRawDocument();
-        console.log(doc);
+        const data = await api.post('/users/forgot-password', {
+            document: doc,
+            email: userEmail,
+        });
+
+        console.log(data);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
